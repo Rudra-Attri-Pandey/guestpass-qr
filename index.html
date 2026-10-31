@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GuestPass QR — Touchless Office Register</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="glass-bg"></div>
+
+  <div class="app-container">
+    <!-- Left: Mobile Visitor Simulator -->
+    <section class="device-simulator">
+      <div class="mobile-frame">
+        <div class="mobile-notch"></div>
+        <div class="mobile-screen">
+          <header class="mobile-header">
+            <span class="mobile-logo">🚪 GuestPass</span>
+            <span class="mobile-time">14:30</span>
+          </header>
+
+          <!-- Screen 1: Registration Form -->
+          <div class="mobile-body" id="checkin-screen">
+            <h3>Office Check-In</h3>
+            <p class="form-instruction">Please enter your details to notify your host.</p>
+
+            <form id="checkin-form">
+              <div class="form-group">
+                <label for="guest-name">Full Name</label>
+                <input type="text" id="guest-name" placeholder="John Doe" required>
+              </div>
+              <div class="form-group">
+                <label for="host-name">Host Name (Who are you visiting?)</label>
+                <input type="text" id="host-name" placeholder="Sarah Miller" required>
+              </div>
+              <div class="form-group">
+                <label for="guest-phone">Phone Number</label>
+                <input type="tel" id="guest-phone" placeholder="+1 (555) 019-2834" required>
+              </div>
+              <div class="form-group">
+                <label for="visit-purpose">Purpose of Visit</label>
+                <select id="visit-purpose" required>
+                  <option value="Meeting">Client Meeting</option>
+                  <option value="Interview">Job Interview</option>
+                  <option value="Delivery">Package Delivery</option>
+                  <option value="Personal">Personal Visit</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">Generate Check-in QR</button>
+            </form>
+          </div>
+
+          <!-- Screen 2: Generated QR Pass -->
+          <div class="mobile-body hidden" id="pass-screen">
+            <div class="success-icon">✓</div>
+            <h3>Check-In Registered!</h3>
+            <p>Your host has been notified via Slack/SMS.</p>
+
+            <div class="qr-container">
+              <div class="qr-code">
+                <img id="pass-qr-img" alt="Guest pass QR code" width="140" height="140" style="display:block;width:140px;height:140px;">
+              </div>
+              <span class="qr-id" id="pass-id">ID: -</span>
+            </div>
+
+            <div class="pass-details">
+              <p><strong>Guest:</strong> <span id="pass-guest-name">-</span></p>
+              <p><strong>Host:</strong> <span id="pass-host-name">-</span></p>
+            </div>
+
+            <button id="btn-reset-checkin" class="btn btn-secondary btn-block">New Guest Check-in</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right: Host Receptionist Console -->
+    <main class="console-panel">
+      <header class="console-header">
+        <div>
+          <h2>Reception Console</h2>
+          <p class="panel-desc">Live visitor ledger served by the backend API.</p>
+        </div>
+        <div class="connection-status">
+          <span class="pulse-dot"></span> Live Hub Sync
+        </div>
+      </header>
+
+      <!-- KPI row -->
+      <div class="kpis">
+        <div class="kpi-card">
+          <span class="kpi-label">ACTIVE VISITORS</span>
+          <span class="kpi-value" id="count-active">0</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">TOTAL TODAY</span>
+          <span class="kpi-value" id="count-total">0</span>
+        </div>
+      </div>
+
+      <!-- Ledger log list -->
+      <section class="ledger">
+        <h3>Visitor Log Book</h3>
+        <div class="ledger-tools">
+          <input type="search" id="host-search" placeholder="Search hosts… (e.g. Sarah)" aria-label="Search hosts" autocomplete="off">
+          <ul id="host-results" class="host-results" aria-label="Host matches"></ul>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Guest</th>
+                <th>Host</th>
+                <th>Purpose</th>
+                <th>Time In</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="ledger-list">
+              <tr class="empty-state">
+                <td colspan="6">No visitors recorded today yet. Use the simulator to check-in.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Notification Banner -->
+  <div class="toast hidden" id="toast-banner">
+    <div class="toast-content">
+      <span class="toast-bell">🔔</span>
+      <div>
+        <h4 id="toast-title">Host Notified!</h4>
+        <p id="toast-body">Sarah has checked in to meet John.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
