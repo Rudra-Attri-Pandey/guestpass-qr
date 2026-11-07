@@ -20,6 +20,7 @@ Copy `.env.example` to `.env` to override defaults:
 | `PORT` | Preferred port (default `3014`) |
 | `CORS_ORIGINS` | Comma-separated allowed origins (default `http://localhost:3014`) |
 | `SLACK_WEBHOOK_URL` | If set, check-ins POST a notice (best-effort, never fails the check-in); if unset, skipped with a log line |
+| `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` | If **both** set, passes persist to Supabase (`guest_passes` via PostgREST) — source of truth across restarts; if unset, local JSON-file store (dev mode) |
 
 ## API
 
@@ -31,13 +32,12 @@ Copy `.env.example` to `.env` to override defaults:
 - `GET /api/hosts?q=` → `{hosts[]}` simple substring host search.
 - `GET /api/pass/:id/qr` → PNG of the pass payload `{id,name,host,checked_in_at}`; frontend shows it via `<img src="/api/pass/ID/qr">`.
 
-Store: `data/ledger.json` (gitignored). Swap for Supabase when multi-host
-realtime is needed — the server logs this at boot.
+Store: dual-mode. When `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` are set, data persists to Supabase (`guest_passes` table via PostgREST — pass IDs are uniqueness-checked before insert). Unset, it falls back to `data/ledger.json` (gitignored, local dev mode). The active store is logged at boot and reported by `GET /api/health` (`store: supabase` / `json-file`).
 
 ## What is real / what is not
 
-- ✅ Real: validation, collision-free IDs, stable-ID checkout, JSON ledger, real QR PNGs, host search, offline fallback queue (localStorage, clearly labeled), toasts, HTML escaping.
-- ❌ Not yet: realtime websocket/Supabase sync, SMS/Twilio alerts, auth/multi-tenant. Slack only if `SLACK_WEBHOOK_URL` is set.
+- ✅ Real: validation, collision-free IDs, stable-ID checkout, Supabase persistence (when configured; file ledger otherwise), real QR PNGs, host search, offline fallback queue (localStorage, clearly labeled), toasts, HTML escaping.
+- ❌ Not yet: realtime websocket updates, SMS/Twilio alerts, auth/multi-tenant. Slack only if `SLACK_WEBHOOK_URL` is set.
 
 ## Prototype notes (fixed)
 
