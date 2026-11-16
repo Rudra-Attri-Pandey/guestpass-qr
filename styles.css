@@ -531,3 +531,9 @@ td {
 
 /* Readability: dark ink on the bright accent fill. */
 .btn-primary { color: #06130C; }
+
+/* Palette roles - warning (amber), info (blue), sage, olive */
+.status-badge { color: rgba(227, 200, 2, 0.95); }
+.connection-status { box-shadow: 0 0 0 1px rgba(52, 18, 227, 0.45) inset; }
+.success-icon { border-color: rgba(81, 143, 115, 0.85); }
+.kpi-label { border-bottom: 1px solid rgba(99, 96, 73, 0.55); padding-bottom: 2px; }
