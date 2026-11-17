@@ -29,7 +29,7 @@
 }
 
 body {
-  background-color: var(--bg);
+  background: linear-gradient(rgba(7,9,19,0.72), rgba(7,9,19,0.72)), linear-gradient(135deg, #3DE398 0%, #E31F00 20%, #E3C802 40%, #3412E3 60%, #518F73 80%, #636049 100%); background-attachment: fixed;
   color: var(--fg);
   font-family: var(--font-body);
   height: 100vh;
